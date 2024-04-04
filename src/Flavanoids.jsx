@@ -1,8 +1,47 @@
 import React, { useState, useEffect } from "react";
+import wineData from "../wine-data.json";
+import { Utils } from "./Utilities/Utils";
+export function Flavanoids() {
+  const [data, setData] = useState([]);
+  const [values, setValues] = useState([]);
 
-export function Flavanoids({ data }) {
-  const alcoholClasses = data.map(entry => entry.alcoholClass);
-  const uniqueAlcoholClasses = [...new Set(alcoholClasses)];
+  // Function to calculate class-wise mean, median, and mode of Flavanoids
+  function calculateFlavanoidsStats(data) {
+    const classes = {};
+    data.forEach((checkSaurabh) => {
+      const alcoholClass = checkSaurabh["Alcohol"];
+      const flavanoids = checkSaurabh["Flavanoids"];
+      if (!classes[alcoholClass]) {
+        classes[alcoholClass] = [];
+      }
+      classes[alcoholClass].push(flavanoids);
+    });
+
+    const results = [];
+    for (const alcoholClass in classes) {
+      const flavanoidsData = classes[alcoholClass];
+      const mean = Utils.calculateMean(flavanoidsData);
+      const median = Utils.calculateMedian(flavanoidsData);
+      const mode = Utils.calculateMode(flavanoidsData);
+      results.push({
+        alcoholClass,
+        mean,
+        median,
+        mode,
+      });
+    }
+    return results;
+  }
+
+  useEffect(() => {
+    const flavanoidsStats = calculateFlavanoidsStats(wineData);
+    if (flavanoidsStats != null && flavanoidsStats != undefined) {
+      setData(flavanoidsStats);
+      const alcoholClasses = flavanoidsStats.map((entry) => entry.alcoholClass);
+      const uniqueAlcoholClasses = [...new Set(alcoholClasses)];
+      setValues(uniqueAlcoholClasses);
+    }
+  }, []);
 
   return (
     <div className="table-container">
@@ -11,44 +50,51 @@ export function Flavanoids({ data }) {
         <thead>
           <tr>
             <th>Measure</th>
-            {uniqueAlcoholClasses.map((alcoholClass) => (
-              <th key={alcoholClass}>Class {alcoholClass}</th>
-            ))}
+            {values &&
+              values?.map((alcoholClass) => (
+                <th key={alcoholClass}>Class {alcoholClass}</th>
+              ))}
           </tr>
         </thead>
         <tbody>
           <tr>
             <td>Mean</td>
-            {uniqueAlcoholClasses.map((alcoholClass) => {
-              const entry = data.find(
-                (entry) => entry.alcoholClass === alcoholClass
-              );
-              return (
-                <td key={`${alcoholClass}-mean`}>{entry.mean.toFixed(2)}</td>
-              );
-            })}
+            {values &&
+              values?.map((alcoholClass) => {
+                const entry = data.find(
+                  (entry) =>
+                    Number(entry?.alcoholClass) === Number(alcoholClass)
+                );
+                return (
+                  <td key={`${alcoholClass}-mean`}>
+                    {entry?.mean?.toFixed(2)}
+                  </td>
+                );
+              })}
           </tr>
           <tr>
             <td>Median</td>
-            {uniqueAlcoholClasses.map((alcoholClass) => {
-              const entry = data.find(
-                (entry) => entry.alcoholClass === alcoholClass
-              );
-              return (
-                <td key={`${alcoholClass}-median`}>
-                  {entry.median.toFixed(2)}
-                </td>
-              );
-            })}
+            {values &&
+              values?.map((alcoholClass) => {
+                const entry = data.find(
+                  (entry) => entry.alcoholClass === alcoholClass
+                );
+                return (
+                  <td key={`${alcoholClass}-median`}>
+                    {entry?.median?.toFixed(2)}
+                  </td>
+                );
+              })}
           </tr>
           <tr>
             <td>Mode</td>
-            {uniqueAlcoholClasses.map((alcoholClass) => {
-              const entry = data.find(
-                (entry) => entry.alcoholClass === alcoholClass
-              );
-              return <td key={`${alcoholClass}-mode`}>{entry.mode}</td>;
-            })}
+            {values &&
+              values?.map((alcoholClass) => {
+                const entry = data.find(
+                  (entry) => entry?.alcoholClass === alcoholClass
+                );
+                return <td key={`${alcoholClass}-mode`}>{entry?.mode}</td>;
+              })}
           </tr>
         </tbody>
       </table>
