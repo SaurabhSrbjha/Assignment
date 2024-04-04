@@ -24,6 +24,7 @@ To run this project, you need to have Node.js and yarn installed on your machine
 - `src/Flavanoids.jsx`: React component to display Flavanoids statistics in a table format.
 - `src/Gamma.jsx`: React component to display Gamma statistics in a table format.
 - `src/wine-data.json`: Contains the wine dataset.
-- `src/utils/utils.js`: Contains utility functions to calculate mean, median, and mode.  
+- `src/utils/utils.js`: Contains utility functions to calculate mean, median, and mode.
 
- ![Flavanids](image.png)
+![Flavanoids](image-2.png)
+![Gamma](image-1.png)
