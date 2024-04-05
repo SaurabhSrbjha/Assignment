@@ -26,4 +26,4 @@ To run this project, you need to have Node.js and yarn installed on your machine
 - `src/wine-data.json`: Contains the wine dataset.
 - `src/utils/utils.js`: Contains utility functions to calculate mean, median, and mode.  
  
- ![Result](image.png)
+ ![Result](result.png)
