@@ -10,7 +10,7 @@ export function Gamma() {
   function calculateGamma(data) {
     return data.map((point) => ({
       ...point,
-      Gamma: (point.Ash * point.Hue) / point.Magnesium
+      "Gamma": (point.Ash * point.Hue) / point.Magnesium
     }));
   }
 
@@ -31,7 +31,7 @@ export function Gamma() {
       const gammaData = classes[wineClass];
       const mean = Utils.calculateMean(gammaData);
       const median = Utils.calculateMedian(gammaData);
-      const mode = Utils.calculateMode(gammaData);
+      const mode = Number(Utils.calculateMode(gammaData));
       results.push({
         wineClass,
         mean,
@@ -46,8 +46,7 @@ export function Gamma() {
     const gammaData = calculateGamma(wineData);
     setData(gammaData);
     const gammaStats = calculateGammaStats(gammaData);
-    const wineClasses = gammaStats.map((entry) => entry.wineClass);
-    setValues(wineClasses);
+    setValues(gammaStats);
   }, []);
 
   return (
@@ -58,8 +57,8 @@ export function Gamma() {
           <tr>
             <th>Measure</th>
             {values &&
-              values.map((wineClass) => (
-                <th key={wineClass}>Class {wineClass}</th>
+              values.map((wineClass, index) => (
+                <th key={`${index}`}>Class {wineClass?.wineClass}</th>
               ))}
           </tr>
         </thead>
@@ -67,13 +66,10 @@ export function Gamma() {
           <tr>
             <td>Mean</td>
             {values &&
-              values.map((wineClass) => {
-                const entry = data.find(
-                  (entry) => entry["Alcohol"] === wineClass
-                );
+              values.map((wineClass,index) => {
                 return (
-                  <td key={`${wineClass}-mean`}>
-                    {entry ? entry.mean.toFixed(2) : ""}
+                  <td key={`${wineClass}--${index}-mean`}>
+                    {wineClass?.mean?.toFixed(2)}
                   </td>
                 );
               })}
@@ -81,13 +77,10 @@ export function Gamma() {
           <tr>
             <td>Median</td>
             {values &&
-              values.map((wineClass) => {
-                const entry = data.find(
-                  (entry) => entry["Alcohol"] === wineClass
-                );
+              values.map((wineClass,index) => {
                 return (
-                  <td key={`${wineClass}-median`}>
-                    {entry ? entry.median.toFixed(2) : ""}
+                  <td key={`${wineClass}--${index}-median`}>
+                    {wineClass?.mean?.toFixed(2)}
                   </td>
                 );
               })}
@@ -95,11 +88,8 @@ export function Gamma() {
           <tr>
             <td>Mode</td>
             {values &&
-              values.map((wineClass) => {
-                const entry = data.find(
-                  (entry) => entry["Alcohol"] === wineClass
-                );
-                return <td key={`${wineClass}-mode`}>{entry ? entry.mode : ""}</td>;
+              values.map((wineClass, index) => {
+                return <td key={`${wineClass}-${index}-mode`}>{wineClass?.mode?.toFixed(2)}</td>;
               })}
           </tr>
         </tbody>

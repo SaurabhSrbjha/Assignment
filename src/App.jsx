@@ -1,15 +1,10 @@
-import wineData from '../wine-data.json';
+import React from 'react';
 import { Flavanoids } from './Flavanoids';
 import { Gamma } from './Gamma'; 
- 
-const data = wineData;
- 
- 
-
 function App() {
   return (
      <>
-     <Flavanoids   /> 
+     <Flavanoids/> 
      <Gamma  /> 
      </>
   );
